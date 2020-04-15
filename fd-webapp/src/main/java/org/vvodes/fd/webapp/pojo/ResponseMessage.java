@@ -3,7 +3,7 @@ package org.vvodes.fd.webapp.pojo;
 /**
  * 错误信息响应
  */
-public class ErrorResponse {
+public class ResponseMessage {
     /**
      * 错误代码
      */
@@ -13,12 +13,12 @@ public class ErrorResponse {
      */
     private String message;
 
-    public ErrorResponse(String code, String message) {
+    public ResponseMessage(String code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public ErrorResponse() {
+    public ResponseMessage() {
     }
 
     public String getCode() {

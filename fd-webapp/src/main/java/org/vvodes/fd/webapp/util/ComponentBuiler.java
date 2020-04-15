@@ -1,4 +1,4 @@
-package org.vvodes.fd.webapp;
+package org.vvodes.fd.webapp.util;
 
 import org.coodex.util.Common;
 import org.coodex.util.Profile;

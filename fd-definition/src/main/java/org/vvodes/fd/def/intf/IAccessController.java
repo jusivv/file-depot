@@ -22,10 +22,19 @@ public interface IAccessController extends IProviderSelector {
     boolean canRead(String clientId, String token, String fileId);
 
     /**
-     * 是否允许读
+     * 是否在可操作范围内
      * @param clientId  终端ID
      * @param fileOwner 文件属主
      * @return          是否允许读
      */
-    boolean allowRead(String clientId, String fileOwner);
+    boolean inScope(String clientId, String fileOwner);
+
+    /**
+     * 是否可删除
+     * @param clientId  终端ID
+     * @param token     令牌
+     * @param fileId    文件ID
+     * @return          是否可删除
+     */
+    boolean canDelete(String clientId, String token, String fileId);
 }

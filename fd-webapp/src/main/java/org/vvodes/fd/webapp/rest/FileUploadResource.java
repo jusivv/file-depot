@@ -13,8 +13,8 @@ import org.vvodes.fd.def.intf.IAccessController;
 import org.vvodes.fd.def.intf.IFileCipher;
 import org.vvodes.fd.def.intf.IFileRepository;
 import org.vvodes.fd.def.pojo.StoreFileInfo;
-import org.vvodes.fd.webapp.ComponentBuiler;
-import org.vvodes.fd.webapp.pojo.ErrorResponse;
+import org.vvodes.fd.webapp.util.ComponentBuiler;
+import org.vvodes.fd.webapp.util.MessageResponseHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -22,7 +22,6 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -110,13 +109,11 @@ public class FileUploadResource {
                         }
                         asyncResponse.resume(fileInfoList);
                     } else {
-                        asyncResponse.resume(
-                                Response.status(403).entity(
-                                        new ErrorResponse("403", "Access Forbidden.")).build());
+                        MessageResponseHelper.resume(403, "Access Forbidden", asyncResponse);
                     }
                 } catch (Throwable t) {
                     log.error(t.getLocalizedMessage(), t);
-                    asyncResponse.resume(Response.status(500).entity(t.getLocalizedMessage()).build());
+                    MessageResponseHelper.resume(500, t.getLocalizedMessage(), asyncResponse);
                 }
             }
         });

@@ -17,12 +17,17 @@ public class ForbiddenAccessController implements IAccessController {
     }
 
     @Override
-    public boolean allowRead(String clientId, String fileOwner) {
+    public boolean inScope(String clientId, String fileOwner) {
+        return false;
+    }
+
+    @Override
+    public boolean canDelete(String clientId, String token, String fileId) {
         return false;
     }
 
     @Override
     public boolean accept(String tag) {
-        return tag.equalsIgnoreCase("forbidden");
+        return "forbidden".equalsIgnoreCase(tag);
     }
 }

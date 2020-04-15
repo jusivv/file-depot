@@ -10,8 +10,8 @@ import org.vvodes.fd.def.intf.IFileCipher;
 import org.vvodes.fd.def.intf.IFileRepository;
 import org.vvodes.fd.def.pojo.CommonFileInfo;
 import org.vvodes.fd.def.pojo.StoreFileInfo;
-import org.vvodes.fd.webapp.ComponentBuiler;
-import org.vvodes.fd.webapp.pojo.ErrorResponse;
+import org.vvodes.fd.webapp.util.ComponentBuiler;
+import org.vvodes.fd.webapp.util.MessageResponseHelper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
@@ -46,9 +46,7 @@ public class FileDownloadResource {
     }
 
     private void forbidden(AsyncResponse asyncResponse) {
-        asyncResponse.resume(
-                Response.status(403).entity(
-                        new ErrorResponse("403", "Access Forbidden.")).build());
+        MessageResponseHelper.resume(403, "Access Forbidden", asyncResponse);
     }
 
     private String getContentDispType(CommonFileInfo fileInfo) {
@@ -68,10 +66,11 @@ public class FileDownloadResource {
             @Override
             public void run() {
                 try {
+                    boolean readUnlimited = profile.getBool("read.unlimited", false);
                     IAccessController accessController = ComponentBuiler.getAccessController(clientId);
-                    if (accessController.canRead(clientId, token, fileId)) {
+                    if (readUnlimited || accessController.canRead(clientId, token, fileId)) {
                         final StoreFileInfo fileInfo = fileRepository.getFileInfo(fileId);
-                        if (accessController.allowRead(clientId, fileInfo.getOwner())) {
+                        if (readUnlimited || accessController.inScope(clientId, fileInfo.getOwner())) {
                             Response.ResponseBuilder builder = Response.ok()
                                     .header("Content-Type", fileInfo.getContentType());
                             try {
@@ -110,7 +109,7 @@ public class FileDownloadResource {
                     }
                 } catch (Throwable t) {
                     log.error(t.getLocalizedMessage(), t);
-                    asyncResponse.resume(Response.status(500).entity(t.getLocalizedMessage()).build());
+                    MessageResponseHelper.resume(500, t.getLocalizedMessage(), asyncResponse);
                 }
             }
         });

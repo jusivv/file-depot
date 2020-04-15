@@ -62,6 +62,6 @@ public class AesV1FileCipher implements IFileCipher {
 
     @Override
     public boolean accept(String tag) {
-        return tag.equalsIgnoreCase("aes.v1");
+        return "aes.v1".equalsIgnoreCase(tag);
     }
 }

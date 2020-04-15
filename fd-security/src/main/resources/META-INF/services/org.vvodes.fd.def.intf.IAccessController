@@ -1,3 +1,4 @@
 org.vvodes.fd.security.AllowableAccessController
 org.vvodes.fd.security.ForbiddenAccessController
 org.vvodes.fd.security.ReadOnlyAccessController
+org.vvodes.fd.security.ConcreteAccessController

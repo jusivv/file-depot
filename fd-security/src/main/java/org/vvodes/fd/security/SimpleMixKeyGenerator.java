@@ -18,6 +18,6 @@ public class SimpleMixKeyGenerator implements IKeyGenerator {
 
     @Override
     public boolean accept(String tag) {
-        return tag.equalsIgnoreCase("mixer.simple");
+        return "mixer.simple".equalsIgnoreCase(tag);
     }
 }
