@@ -1,4 +1,4 @@
-package org.vvodes.fd.security;
+package org.vvodes.fd.security.aes;
 
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.stream.CryptoInputStream;

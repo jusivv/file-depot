@@ -1,4 +1,4 @@
-package org.vvodes.fd.security;
+package org.vvodes.fd.security.access;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;

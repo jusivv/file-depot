@@ -1,4 +1,4 @@
-package org.vvodes.fd.security;
+package org.vvodes.fd.security.key;
 
 import org.coodex.util.DigestHelper;
 import org.vvodes.fd.def.intf.IKeyGenerator;
@@ -7,6 +7,12 @@ import org.vvodes.fd.def.intf.IKeyGenerator;
  * 简易   的密钥生成器
  */
 public class SimpleMixKeyGenerator implements IKeyGenerator {
+    /**
+     * 生成128位密钥
+     * @param key   主密钥
+     * @param salt  盐
+     * @return
+     */
     @Override
     public byte[] generate(byte[] key, byte[] salt) {
         byte[] result = new byte[salt.length * 2 + key.length];

@@ -1,17 +1,12 @@
-package org.vvodes.fd.security;
+package org.vvodes.fd.security.access;
 
 /**
  * 只读访问控制器
  */
-public class ReadOnlyAccessController extends AbstractAccessController {
+public class ReadOnlyAccessController extends AllowableAccessController {
     @Override
     public boolean canWrite(String clientId, String token) {
         return false;
-    }
-
-    @Override
-    public boolean canRead(String clientId, String token, String fileId) {
-        return true;
     }
 
     @Override

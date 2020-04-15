@@ -115,7 +115,7 @@ public class LocalDiskFileRepository implements IFileRepository {
 
     private String getFilePath(String fileId) {
         String hashPath = getPath(fileId);
-        String basePath = profile.getString("local.disk.file.repository.root");
+        String basePath = profile.getString("file.repository.local.disk.root");
         if (Common.isBlank(basePath) || !Files.isDirectory(Paths.get(basePath))) {
             throw new RuntimeException("local disk file repository root path is illegal");
         }

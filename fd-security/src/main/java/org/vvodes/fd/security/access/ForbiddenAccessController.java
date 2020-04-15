@@ -1,4 +1,4 @@
-package org.vvodes.fd.security;
+package org.vvodes.fd.security.access;
 
 import org.vvodes.fd.def.intf.IAccessController;
 
