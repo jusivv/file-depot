@@ -22,7 +22,7 @@ public class AllowableAccessController extends AbstractAccessController {
 
     public AllowableAccessController() {
         GoogleAuthenticatorConfig config = new GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder()
-                .setKeyRepresentation(KeyRepresentation.BASE64).build();
+                .setKeyRepresentation(KeyRepresentation.BASE64).setCodeDigits(6).build();
         googleAuthenticator = new GoogleAuthenticator(config);
     }
 

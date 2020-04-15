@@ -4,7 +4,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${LOG_HOME}/etc-trucking-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/file-depot-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- each file should be at most 2MB, keep 7 days worth of history, but at most 200MB -->
             <maxFileSize>2MB</maxFileSize>
             <maxHistory>7</maxHistory>
