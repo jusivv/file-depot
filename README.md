@@ -37,7 +37,7 @@ A simple security file upload/download service
 
 - download url: http(s)://<fileserver>/attachments/download/{fileId};c={clientId};t={tokenId}
 - clientId: file-client id
-- tokenId: Time-based One Time Password
+- tokenId: HmacSHA1 value of fileId
 - fileId: id of access file
 
 ### multi-file download
