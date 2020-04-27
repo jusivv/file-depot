@@ -20,11 +20,13 @@ public class CodeTest {
 
     public static void main(String[] args) throws Exception {
         String clientId = "test";
-        String fileId = "test$cc5c898bdbf74422855fcedf37d060ed";
-//        String fileId = "test$e71086ed64fb463fafaeb0a5a788c789,test$cc5c898bdbf74422855fcedf37d060ed";
+//        String fileId = "test$870a83506f9b4a2da4ec610939d743b2";
+        String fileId = "test$870a83506f9b4a2da4ec610939d743b2,test$d02f7374a553462a87db568fdd9a5eeb";
 
 //        log.debug("TOTP: {}", getTotp(clientId));
-        log.debug("downlaod path: /attachments/download/{};c={};t={}",
+//        String host = "http://127.0.0.1:8090";
+        String host = "https://filedepot.etcmall.cn";
+        log.debug("downlaod path: {}/attachments/download/{};c={};t={}", host,
                 fileId, clientId, getDownloadTotp(clientId, fileId));
     }
 

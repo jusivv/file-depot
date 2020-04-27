@@ -39,7 +39,7 @@ access.controller.concrete.location.<clientId>=http://127.0.0.1:8090
 ### 文件上传
 
 - 用户登录成功后，给予上传权限，执行方法“ClientServiceImpl.allowWrite()”
-- 前端上传文件的URL为：http(s)://<fileserver>/attachments/upload/byform/{clientId}/{tokenId}/{encrypt}
+- 前端上传文件的URL为：http(s)://\<fileserver\>/attachments/upload/byform/{clientId}/{tokenId}/{encrypt}
   - clientId：文件服务器为 Concrete 后端服务分配的 clientId
   - tokenId：Concrete 后端服务给前端用户的会话 Id
   - encrypt：文件存储时是否需要加密，0 为不加密，1 为加密
@@ -48,7 +48,7 @@ access.controller.concrete.location.<clientId>=http://127.0.0.1:8090
 
 - 给包含文件 ID 的 VO 属性上增加注解“org.coodex.concrete.attachments.Attachment”，在将 VO 呈现给前端时，拦截器会将加注解的属性值加入token，给予前端访问权限
 - 也可以用“ClientServiceImpl.allow(String ...)“方法，手动授权文件访问
-- 前端获取（下载）文件的URL为：http(s)://<fileserver>/attachments/download/{fileId};c={clientId};t={tokenId}
+- 前端获取（下载）文件的URL为：http(s)://\<fileserver\>/attachments/download/{fileId};c={clientId};t={tokenId}
   - clientId：文件服务器为 Concrete 后端服务分配的 clientId
   - tokenId：Concrete 后端服务给前端用户的会话 Id
   - fileId：要访问的文件 ID

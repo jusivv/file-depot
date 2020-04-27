@@ -49,11 +49,12 @@ A simple security file upload/download service
 
 ### Concrete
 
-- see filedepot.concrete.manual.md
+- see filedepot.manual.concrete.md
 
 ### TOTP
 
 - TOTP used for file-client
+- TOTP is 6 digits, step size is 30 seconds, window size is 3 (expires in 1.5 minutes), see [RCF6238](https://tools.ietf.org/html/rfc6238)
 - AllowableAccessController、ReadOnlyAccessController based on TOTP
 
 ### Common for user-browser
