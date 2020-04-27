@@ -1,5 +1,7 @@
 package org.vvodes.fd.webapp.rest;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.coodex.util.Common;
 import org.coodex.util.Profile;
 import org.slf4j.Logger;
@@ -20,8 +22,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("attachments/download")
 public class FileDownloadResource {
@@ -45,10 +48,6 @@ public class FileDownloadResource {
         return fileCipher.getDecryptOutputStream(os, key);
     }
 
-    private void forbidden(AsyncResponse asyncResponse) {
-        MessageResponseHelper.resume(403, "Access Forbidden", asyncResponse);
-    }
-
     private String getContentDispType(CommonFileInfo fileInfo) {
         String contentType = fileInfo.getContentType();
         return contentType.startsWith("text") || contentType.startsWith("image") ? "inline"
@@ -66,46 +65,29 @@ public class FileDownloadResource {
             @Override
             public void run() {
                 try {
+                    // whether or read unlimited
                     boolean readUnlimited = profile.getBool("read.unlimited", false);
+                    // get access controller
                     IAccessController accessController = ComponentBuiler.getAccessController(clientId);
+                    // authenticate
                     if (readUnlimited || accessController.canRead(clientId, token, fileId)) {
-                        final StoreFileInfo fileInfo = fileRepository.getFileInfo(fileId);
-                        if (readUnlimited || accessController.inScope(clientId, fileInfo.getOwner())) {
-                            Response.ResponseBuilder builder = Response.ok()
-                                    .header("Content-Type", fileInfo.getContentType());
-                            try {
-                                builder.header("Content-Disposition",
-                                        getContentDispType(fileInfo) + ";filename\"" +
-                                                URLEncoder.encode(fileInfo.getOriginName(), "UTF-8") +
-                                                "\"");
-                            } catch (UnsupportedEncodingException e) {
-                                log.error(e.getLocalizedMessage(), e);
-                                throw new RuntimeException(e);
+                        // list file info
+                        String[] fids = fileId.split(",");
+                        List<StoreFileInfo> fileInfoList = new ArrayList<>();
+                        for (String fid : fids) {
+                            StoreFileInfo storeFileInfo = fileRepository.getFileInfo(fid);
+                            if (!readUnlimited && !accessController.inScope(fid, storeFileInfo.getOwner())) {
+                                throw new RuntimeException(
+                                        String.format("forbidden to access file, id: %s, owner: %s", fid,
+                                                storeFileInfo.getOwner())
+                                );
                             }
-                            StreamingOutput output = new StreamingOutput() {
-                                @Override
-                                public void write(OutputStream output) throws IOException, WebApplicationException {
-                                    OutputStream os = output;
-                                    if (!Common.isBlank(fileInfo.getCipherModel())) {
-                                        // key
-                                        byte[] key = ComponentBuiler.getKey(fileInfo.getCipherModel(), fileInfo.getSalt());
-                                        // cipher
-                                        IFileCipher fileCipher = ComponentBuiler.getFileCipher(fileInfo.getCipherModel());
-                                        os = fileCipher.getDecryptOutputStream(output, key);
-                                    }
-                                    try {
-                                        fileRepository.fetch(os, fileInfo.getFileId());
-                                    } finally {
-                                        os.close();
-                                    }
-                                }
-                            };
-                            asyncResponse.resume(builder.entity(output).build());
-                        } else {
-                            forbidden(asyncResponse);
+                            fileInfoList.add(storeFileInfo);
                         }
+                        // fetch file
+                        asyncResponse.resume(fetchFile(fileInfoList).build());
                     } else {
-                        forbidden(asyncResponse);
+                        MessageResponseHelper.resume(403, "Access Forbidden", asyncResponse);
                     }
                 } catch (Throwable t) {
                     log.error(t.getLocalizedMessage(), t);
@@ -115,5 +97,57 @@ public class FileDownloadResource {
         });
         t.setPriority(5);
         t.start();
+    }
+
+    private Response.ResponseBuilder fetchFile(final List<StoreFileInfo> fileInfoList) throws IOException {
+        Response.ResponseBuilder builder = Response.ok();
+        if (fileInfoList.size() == 1) {
+            StoreFileInfo storeFileInfo = fileInfoList.get(0);
+            builder.header("Content-Type", storeFileInfo.getContentType())
+                    .header("Content-Disposition",
+                            String.format("%s;filename=\"%s\"", getContentDispType(storeFileInfo),
+                                    URLEncoder.encode(storeFileInfo.getOriginName(), "UTF-8")));
+        } else {
+            builder.header("Content-Type", "application/zip")
+                    .header("Content-Disposition",
+                            String.format("attachment;filename=\"%d.zip\"",
+                                    System.currentTimeMillis()));
+        }
+        StreamingOutput output = new StreamingOutput() {
+            @Override
+            public void write(OutputStream output) throws IOException, WebApplicationException {
+                OutputStream outputStream = output;
+                ZipArchiveOutputStream zipArchiveOutputStream = null;
+                if (fileInfoList.size() > 1) {
+                    zipArchiveOutputStream = new ZipArchiveOutputStream(output);
+                    outputStream = zipArchiveOutputStream;
+                }
+                try {
+                    int count = 0;
+                    for (StoreFileInfo storeFileInfo : fileInfoList) {
+                        if (zipArchiveOutputStream != null) {
+                            count ++;
+                            ZipArchiveEntry zipArchiveEntry = new ZipArchiveEntry(
+                                    String.format("%d-%s", count, storeFileInfo.getOriginName())
+                            );
+                            zipArchiveOutputStream.putArchiveEntry(zipArchiveEntry);
+                        }
+                        OutputStream os = outputStream;
+                        if (!Common.isBlank(storeFileInfo.getCipherModel())) {
+                            os = getDecryptStream(outputStream, storeFileInfo.getCipherModel(),
+                                    storeFileInfo.getSalt());
+                        }
+                        fileRepository.fetch(os, storeFileInfo.getFileId());
+                        if (zipArchiveOutputStream != null) {
+                            zipArchiveOutputStream.closeArchiveEntry();
+                        }
+                    }
+                } finally {
+                    outputStream.flush();
+                    outputStream.close();
+                }
+            }
+        };
+        return builder.entity(output);
     }
 }

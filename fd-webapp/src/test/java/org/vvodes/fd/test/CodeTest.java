@@ -22,9 +22,11 @@ public class CodeTest {
     public static void main(String[] args) throws Exception {
         String clientId = "test";
 //        String fileId = "test$cc5c898bdbf74422855fcedf37d060ed";
-        String fileId = "test$d02f7374a553462a87db568fdd9a5eeb";
-        log.debug("TOTP: {}", getTotp(clientId));
-//        log.debug("HMAC: {}", getHmac(clientId, fileId));
+        String fileId = "test$e71086ed64fb463fafaeb0a5a788c789,test$cc5c898bdbf74422855fcedf37d060ed";
+
+//        log.debug("TOTP: {}", getTotp(clientId));
+        log.debug("downlaod path: /attachments/download/{};c={};t={}",
+                fileId, clientId, getHmac(clientId, fileId));
     }
 
     private static int getTotp(String clientId) {
