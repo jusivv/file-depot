@@ -29,7 +29,6 @@ public class FileDepotWebapp extends SpringBootServletInitializer {
 
     @Bean
     public ResourceConfig getResourceConfig() {
-//        org.springframework.aop.framework.AopProxyUtils
         ResourceConfig resourceConfig = new ResourceConfig();
         resourceConfig.packages(false, "org.vvodes.fd.webapp.rest");
         return resourceConfig;

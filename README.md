@@ -37,12 +37,13 @@ A simple security file upload/download service
 
 - download url: http(s)://<fileserver>/attachments/download/{fileId};c={clientId};t={tokenId}
 - clientId: file-client id
-- tokenId: HmacSHA1 value of fileId
+- tokenId: Time-based One Time Password, HmacSHA1 value of fileId as secret key
 - fileId: id of access file
 
 ### multi-file download
 
-- TODO
+- the same as download by file-client
+- fileId split with ","
 
 ## access control
 

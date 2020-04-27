@@ -44,17 +44,20 @@ public class AllowableAccessController extends AbstractAccessController {
 
     @Override
     public boolean canRead(String clientId, String token, String fileId) {
-        String keyBase64 = profile.getString("access.controller.key." + clientId);
-        if (Common.isBlank(keyBase64)) {
-            log.warn("access controller key for {} is null", clientId);
-            return false;
-        }
-
         try {
-            return Common.byte2hex(
+            int t = Integer.parseInt(token);
+            String keyBase64 = profile.getString("access.controller.key." + clientId);
+            if (Common.isBlank(keyBase64)) {
+                log.warn("access controller key for {} is null", clientId);
+                return false;
+            }
+            String secretBase64 = Base64.getEncoder().encodeToString(
                     DigestHelper.hmac(fileId.getBytes(Charset.forName("UTF-8")),
-                            Base64.getDecoder().decode(keyBase64))
-            ).equalsIgnoreCase(token);
+                            Base64.getDecoder().decode(keyBase64)));
+            return googleAuthenticator.authorize(secretBase64, t);
+        } catch (NumberFormatException e) {
+            log.error(e.getLocalizedMessage(), e);
+            return false;
         } catch (GeneralSecurityException e) {
             log.error(e.getLocalizedMessage(), e);
             return false;
