@@ -23,9 +23,9 @@ public class CodeTest {
 //        String fileId = "test$870a83506f9b4a2da4ec610939d743b2";
         String fileId = "test$870a83506f9b4a2da4ec610939d743b2,test$d02f7374a553462a87db568fdd9a5eeb";
 
-//        log.debug("TOTP: {}", getTotp(clientId));
-//        String host = "http://127.0.0.1:8090";
-        String host = "https://filedepot.etcmall.cn";
+        log.debug("TOTP: {}", getTotp(clientId));
+        String host = "http://127.0.0.1:8090";
+//        String host = "https://filedepot.etcmall.cn";
         log.debug("downlaod path: {}/attachments/download/{};c={};t={}", host,
                 fileId, clientId, getDownloadTotp(clientId, fileId));
     }
