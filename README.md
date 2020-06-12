@@ -47,16 +47,38 @@ A simple security file upload/download service
 
 ## access control
 
-### Concrete
-
-- see filedepot.manual.concrete.md
-
-### TOTP
+### TOTP based
 
 - TOTP used for file-client
 - TOTP is 6 digits, step size is 30 seconds, window size is 3 (expires in 1.5 minutes), see [RCF6238](https://tools.ietf.org/html/rfc6238)
 - AllowableAccessController、ReadOnlyAccessController based on TOTP
 
-### Common for user-browser
+### file-client feedback
 
-- TODO
+- used for user-browser
+- file-client create token for user-browser
+- user-browser request file-depot with token
+- file-depot authenticate token by request file-client
+
+#### Common feedback
+
+- request file-client by url http://<host>:<port>/<path>/\[writable|readable|deletable\]
+- request Content-Type is 'application/json'
+- body sample:
+
+```JSON
+{
+"token": "file-client-user-token"
+}
+```
+or
+```JSON
+{
+"token": "file-client-user-token",
+"fileId": "file-id or file-ids split with ','"
+}
+```
+
+#### Concrete
+
+- see filedepot.manual.concrete.md
