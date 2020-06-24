@@ -20,7 +20,7 @@ public class CodeTest {
 
     public static void main(String[] args) throws Exception {
         String clientId = "test";
-        String fileId = "test$295188c117fc44d380789090a7c0b7b4";
+        String fileId = "test$5cbc9a3ec3e14df9adda3a24b80f0f75";
 //        String fileId = "test$870a83506f9b4a2da4ec610939d743b2,test$d02f7374a553462a87db568fdd9a5eeb";
 
         log.debug("TOTP: {}", getTotp(clientId));

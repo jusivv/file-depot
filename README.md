@@ -38,7 +38,6 @@ A simple security file upload/download service
   "token": "242812",
   "fileName": "idcard2.jpg",
   "contentType": "image/jpeg",
-  "fileSize": 80384,
   "encrypt": true,
   "base64File": "<base64string>"
 }

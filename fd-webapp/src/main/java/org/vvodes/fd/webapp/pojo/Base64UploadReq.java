@@ -18,10 +18,6 @@ public class Base64UploadReq {
      */
     private String contentType;
     /**
-     * 文件大小（字节）
-     */
-    private long fileSize;
-    /**
      * 文件Base64字符串
      */
     private String base64File;
@@ -61,14 +57,6 @@ public class Base64UploadReq {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
-    }
-
-    public long getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(long fileSize) {
-        this.fileSize = fileSize;
     }
 
     public String getBase64File() {

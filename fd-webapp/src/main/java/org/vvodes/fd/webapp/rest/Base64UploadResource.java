@@ -53,11 +53,12 @@ public class Base64UploadResource extends AbstractUploadResource {
                         storeFileInfo.setOriginName(req.getFileName());
                         storeFileInfo.setExtName(FilenameUtils.getExtension(req.getFileName()));
                         storeFileInfo.setStoreTime(System.currentTimeMillis());
-                        storeFileInfo.setSize(req.getFileSize());
                         storeFileInfo.setContentType(req.getContentType());
 
-                        InputStream is = new ByteArrayInputStream(
-                                Base64.getDecoder().decode(req.getBase64File()));
+                        byte[] fileContent = Base64.getDecoder().decode(req.getBase64File());
+
+                        storeFileInfo.setSize(fileContent.length);
+                        InputStream is = new ByteArrayInputStream(fileContent);
 
                         try {
                             if (req.isEncrypt()) {
