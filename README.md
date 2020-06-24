@@ -4,58 +4,69 @@ A simple security file upload/download service
 
 ## concept
 
-- file-depot
-- file-client
-- user-browser
+### file-depot
+
+- provide file upload & download service
+
+### file-client
+
+- a web service who store his attachments on file-depot
+
+### user-browser
+
+- a end user using business service provided by file-client and file upload & download service provided by file-depot
 
 ## upload
 
-### upload by user-browser
+### upload by form
 
-- upload url: http(s)://<fileserver>/attachments/upload/byform/{clientId}/{tokenId}/{encrypt}
+- upload url: http(s)://<fileserver>/attachments/upload/byform/{clientId}/{token}/{encrypt}
 - clientId: file-client id
-- tokenId: user token in file-client
+- token: file access token, session token or one-time-password 
 - encrypt: 0 - save origin file on file-depot; 1 - save file with AES encrypt on file-depot
+- support multi-upload
 
-### upload by file-client
+### upload by base64 string
 
-- upload url: http(s)://<fileserver>/attachments/upload/byform/{clientId}/{tokenId}/{encrypt}
-- clientId: file-client id
-- tokenId: Time-based One Time Password
-- encrypt: 0 - save origin file on file-depot; 1 - save file with AES encrypt on file-depot
+- upload url: http(s)://<fileserver>/attachments/upload/bybase64
+- method: post, content-type: application/json
+- json content like this:
+
+```JSON
+{
+  "clientId": "test",
+  "token": "242812",
+  "fileName": "idcard2.jpg",
+  "contentType": "image/jpeg",
+  "fileSize": 80384,
+  "encrypt": true,
+  "base64File": "<base64string>"
+}
+```
 
 ## download
 
-### download by user-browser
-
-- download url: http(s)://<fileserver>/attachments/download/{fileId};c={clientId};t={tokenId}
+- download url: http(s)://<fileserver>/attachments/download/{fileId};c={clientId};t={token}
 - clientId: file-client id
-- tokenId: user token in file-client
-- fileId: id of access file
-
-### download by file-client
-
-- download url: http(s)://<fileserver>/attachments/download/{fileId};c={clientId};t={tokenId}
-- clientId: file-client id
-- tokenId: Time-based One Time Password, HmacSHA1 value of fileId as secret key
-- fileId: id of access file
-
-### multi-file download
-
-- the same as download by file-client
-- fileId split with ","
+- token: file access token, session token or one time password
+- fileId: file id which you want to download
+- you can join fileId with "," to download files
+- multi-file download will pack all request files in a zip file
 
 ## access control
 
 ### TOTP based
 
-- TOTP used for file-client
+- a TOTP as a token, apply to file-client
 - TOTP is 6 digits, step size is 30 seconds, window size is 3 (expires in 1.5 minutes), see [RCF6238](https://tools.ietf.org/html/rfc6238)
 - AllowableAccessController、ReadOnlyAccessController based on TOTP
+- file-client & file-depot hold the same secret to calculate one time password
+- for uploading, supply TOTP as token
+- for downloading, secret as key, fileId as content, calculate HmacSHA1 value which as new secret to calculate the one time password
 
 ### file-client feedback
 
-- used for user-browser
+- apply to user-browser
 - file-client create token for user-browser
 - user-browser request file-depot with token
 - file-depot authenticate token by request file-client

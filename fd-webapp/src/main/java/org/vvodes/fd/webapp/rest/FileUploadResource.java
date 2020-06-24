@@ -9,11 +9,9 @@ import org.coodex.util.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vvodes.fd.def.intf.IAccessController;
-import org.vvodes.fd.def.intf.IFileCipher;
 import org.vvodes.fd.def.intf.IFileRepository;
 import org.vvodes.fd.def.pojo.StoreFileInfo;
-import org.vvodes.fd.webapp.util.ComponentBuiler;
+import org.vvodes.fd.webapp.util.AbstractUploadResource;
 import org.vvodes.fd.webapp.util.MessageResponseHelper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +20,12 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 @Path("attachments/upload/byform")
-public class FileUploadResource {
+public class FileUploadResource extends AbstractUploadResource {
     private static Logger log = LoggerFactory.getLogger(FileUploadResource.class);
 
     private static Profile profile = Profile.get("config.properties");
@@ -39,26 +36,6 @@ public class FileUploadResource {
     public FileUploadResource(IFileRepository fileRepository) {
         this.fileRepository = fileRepository;
         log.debug("resource {} loaded.", this.getClass().getSimpleName());
-    }
-
-    /**
-     * 判断是否有写权限
-     * @param clientId  终端ID
-     * @param token     令牌
-     * @return          是否允许写
-     */
-    private boolean canWrite(String clientId, String token) {
-        IAccessController accessControler = ComponentBuiler.getAccessController(clientId);
-        return accessControler.canWrite(clientId, token);
-    }
-
-    private InputStream getEncryptStream(InputStream is, String cipherModel, String salt)
-            throws IOException {
-        // key
-        byte[] key = ComponentBuiler.getKey(cipherModel, salt);
-        // cipher
-        IFileCipher fileCipher = ComponentBuiler.getFileCipher(cipherModel);
-        return fileCipher.getEncryptInputStream(is, key);
     }
 
     @Path("{clientId}/{tokenId}/{encrypt}")
