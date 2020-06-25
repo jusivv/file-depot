@@ -23,13 +23,32 @@ public abstract class ClientFeedbackAccessController extends AbstractAccessContr
         return response;
     }
 
-    protected abstract boolean getFeedback(String host, String path, String token, String fileId);
+    protected abstract Request buildRequest(String url, String token, String fileId);
+
+    protected abstract boolean parseResponse(Response response);
+
+    protected boolean getFeedback(String host, String path, String token, String fileId) {
+        String url = (!host.endsWith("/") ? host : host.substring(0, host.length() - 1)) + path;
+        log.debug("request authentication to {}", url);
+        Request request = buildRequest(url, token, fileId);
+        Response response = null;
+        try {
+            response = client.newCall(request).execute();
+            return parseResponse(response);
+        } catch (IOException e) {
+            log.error(e.getLocalizedMessage(), e);
+            return false;
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+
+    }
 
     private String getHost(String clientId) {
-        String location = profile.getString("access.controller.feedback.location." + clientId,
+        return profile.getString("access.controller.feedback.location." + clientId,
                 "http://127.0.0.1");
-        log.debug("client {} location: {}", clientId, location);
-        return location;
     }
 
     @Override

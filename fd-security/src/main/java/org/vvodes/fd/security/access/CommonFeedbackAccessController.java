@@ -5,26 +5,20 @@ import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class CommonFeedbackAccessController extends ClientFeedbackAccessController {
     private static Logger log = LoggerFactory.getLogger(CommonFeedbackAccessController.class);
 
     @Override
-    protected boolean getFeedback(String host, String path, String token, String fileId) {
-        String url = (!host.endsWith("/") ? host : host.substring(0, host.length() - 1)) + path;
+    protected Request buildRequest(String url, String token, String fileId) {
         HttpUrl httpUrl = HttpUrl.parse(url);
-
         RequestBody requestBody = RequestBody.create(MediaType.get("application/json"),
                 JSON.toJSONString(fileId != null ? new FileReq(token, fileId) : new TokenReq(token)));
-        Request request = new Request.Builder().url(httpUrl).post(requestBody).build();
-        try {
-            Response response = super.getResponse(request);
-            return response.code() == 200;
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-            return false;
-        }
+        return new Request.Builder().url(httpUrl).post(requestBody).build();
+    }
+
+    @Override
+    protected boolean parseResponse(Response response) {
+        return response.code() == 200;
     }
 
     @Override
