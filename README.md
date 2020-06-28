@@ -20,7 +20,7 @@ A simple security file upload/download service
 
 ### upload by form
 
-- upload url: http(s)://<fileserver>/attachments/upload/byform/{clientId}/{token}/{encrypt}
+- upload url: http(s)://\<fileserver\>/attachments/upload/byform/{clientId}/{token}/{encrypt}
 - clientId: file-client id
 - token: file access token, session token or one-time-password 
 - encrypt: 0 - save origin file on file-depot; 1 - save file with AES encrypt on file-depot
@@ -45,7 +45,7 @@ A simple security file upload/download service
 
 ### upload by base64 string
 
-- upload url: http(s)://<fileserver>/attachments/upload/bybase64
+- upload url: http(s)://\<fileserver\>/attachments/upload/bybase64
 - method: post, content-type: application/json
 - json content like this:
 
@@ -80,7 +80,7 @@ A simple security file upload/download service
 
 ## download
 
-- download url: http(s)://<fileserver>/attachments/download/{fileId};c={clientId};t={token}
+- download url: http(s)://\<fileserver\>/attachments/download/{fileId};c={clientId};t={token}
 - clientId: file-client id
 - token: file access token, session token or one time password
 - fileId: file id which you want to download
@@ -107,7 +107,7 @@ A simple security file upload/download service
 
 #### Common feedback
 
-- request file-client by url http://<host>:<port>/<path>/\[writable|readable|deletable\]
+- request file-client by url http://\<host\>:\<port\>/\<path\>/\[ writable | readable | deletable \]
 - request Content-Type is 'application/json'
 - body sample:
 
