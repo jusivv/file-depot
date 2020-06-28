@@ -25,6 +25,23 @@ A simple security file upload/download service
 - token: file access token, session token or one-time-password 
 - encrypt: 0 - save origin file on file-depot; 1 - save file with AES encrypt on file-depot
 - support multi-upload
+- response a array contains file information, for example:
+
+```json
+[{
+    "owner": "test",
+    "originName": "image.jpg",
+    "extName": "jpg",
+    "fileId": "test$9813ada076f04c949e19eefcd9a5c4d0",
+    "storeTime": 1592979547946,
+    "size": 80384,
+    "hashValue": null,
+    "hashAlgorithm": null,
+    "contentType": "image/jpeg",
+    "cipherModel": "aes.v1",
+    "salt": "<salt>"
+}]
+```
 
 ### upload by base64 string
 
@@ -35,11 +52,29 @@ A simple security file upload/download service
 ```JSON
 {
   "clientId": "test",
-  "token": "242812",
-  "fileName": "idcard2.jpg",
+  "token": "<token>",
+  "fileName": "image.jpg",
   "contentType": "image/jpeg",
   "encrypt": true,
   "base64File": "<base64string>"
+}
+```
+
+- response a json object with file information, for example:
+
+```json
+{
+    "owner": "test",
+    "originName": "image.jpg",
+    "extName": "jpg",
+    "fileId": "test$9813ada076f04c949e19eefcd9a5c4d0",
+    "storeTime": 1592979547946,
+    "size": 80384,
+    "hashValue": null,
+    "hashAlgorithm": null,
+    "contentType": "image/jpeg",
+    "cipherModel": "aes.v1",
+    "salt": "<salt>"
 }
 ```
 
