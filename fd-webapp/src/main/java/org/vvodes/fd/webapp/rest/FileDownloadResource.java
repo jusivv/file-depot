@@ -13,6 +13,7 @@ import org.vvodes.fd.def.intf.IFileRepository;
 import org.vvodes.fd.def.pojo.CommonFileInfo;
 import org.vvodes.fd.def.pojo.StoreFileInfo;
 import org.vvodes.fd.webapp.util.ComponentBuiler;
+import org.vvodes.fd.webapp.util.FileDepotWebException;
 import org.vvodes.fd.webapp.util.MessageResponseHelper;
 
 import javax.ws.rs.*;
@@ -76,10 +77,11 @@ public class FileDownloadResource {
                         List<StoreFileInfo> fileInfoList = new ArrayList<>();
                         for (String fid : fids) {
                             StoreFileInfo storeFileInfo = fileRepository.getFileInfo(fid);
-                            if (!readUnlimited && !accessController.inScope(fid, storeFileInfo.getOwner())) {
-                                throw new RuntimeException(
+                            if (!readUnlimited && !accessController.inScope(clientId, storeFileInfo.getOwner())) {
+                                throw new FileDepotWebException(
                                         String.format("forbidden to access file, id: %s, owner: %s", fid,
-                                                storeFileInfo.getOwner())
+                                                storeFileInfo.getOwner()),
+                                        403
                                 );
                             }
                             fileInfoList.add(storeFileInfo);
@@ -91,7 +93,13 @@ public class FileDownloadResource {
                     }
                 } catch (Throwable t) {
                     log.error(t.getLocalizedMessage(), t);
-                    MessageResponseHelper.resume(500, t.getLocalizedMessage(), asyncResponse);
+                    if (t instanceof FileDepotWebException) {
+                        FileDepotWebException webException = (FileDepotWebException) t;
+                        MessageResponseHelper.resume(webException.getStatusCode(), webException.getLocalizedMessage(),
+                                asyncResponse);
+                    } else {
+                        MessageResponseHelper.resume(500, t.getLocalizedMessage(), asyncResponse);
+                    }
                 }
             }
         });

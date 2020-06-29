@@ -17,12 +17,6 @@ public abstract class ClientFeedbackAccessController extends AbstractAccessContr
         this.client = new OkHttpClient();
     }
 
-    protected Response getResponse(Request request) throws IOException {
-        Response response = client.newCall(request).execute();
-        log.debug("response status code: {}, body: {}", response.code(), response.body().toString());
-        return response;
-    }
-
     protected abstract Request buildRequest(String url, String token, String fileId);
 
     protected abstract boolean parseResponse(Response response);
@@ -34,6 +28,8 @@ public abstract class ClientFeedbackAccessController extends AbstractAccessContr
         Response response = null;
         try {
             response = client.newCall(request).execute();
+            log.debug("response status code: {}", response.code());
+            log.debug("response message: {}", response.message());
             return parseResponse(response);
         } catch (IOException e) {
             log.error(e.getLocalizedMessage(), e);
