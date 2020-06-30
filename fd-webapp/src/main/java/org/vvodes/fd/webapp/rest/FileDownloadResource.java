@@ -79,8 +79,8 @@ public class FileDownloadResource {
                             StoreFileInfo storeFileInfo = fileRepository.getFileInfo(fid);
                             if (!readUnlimited && !accessController.inScope(clientId, storeFileInfo.getOwner())) {
                                 throw new FileDepotWebException(
-                                        String.format("forbidden to access file, id: %s, owner: %s", fid,
-                                                storeFileInfo.getOwner()),
+                                        String.format("forbidden to access file, id: %s, owner: %s, clientId: %s", fid,
+                                                storeFileInfo.getOwner(), clientId),
                                         403
                                 );
                             }

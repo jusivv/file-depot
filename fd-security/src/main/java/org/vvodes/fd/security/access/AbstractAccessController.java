@@ -8,7 +8,7 @@ public abstract class AbstractAccessController implements IAccessController {
 
     @Override
     public boolean inScope(String clientId, String fileOwner) {
-        if (clientId == fileOwner) {
+        if (clientId.equals(fileOwner)) {
             return true;
         }
         String[] scopes = profile.getStrList("access.scope." + clientId);
