@@ -28,7 +28,7 @@
 - 在“config.properties"中，配置访问控制器、文件访问范围、以及 Concrete 后端服务地址
 
 ```properties
-# 访问控制器为concrete，文件服务将使用concrete认证方式
+# 访问控制器为concrete，0.4.0及以上版本为concrete_v0.4.0，文件服务将使用concrete认证方式
 access.controller.<clientId>=concrete
 # 文件访问范围，可用“,”隔开clientId授予访问该用户文件的权限，*表示所有用户上传的文件，不设置表示只能访问自己上传的文件
 access.scope.<clientId>=*
