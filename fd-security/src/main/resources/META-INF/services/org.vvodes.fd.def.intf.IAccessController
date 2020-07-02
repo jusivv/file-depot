@@ -3,3 +3,4 @@ org.vvodes.fd.security.access.ForbiddenAccessController
 org.vvodes.fd.security.access.ReadOnlyAccessController
 org.vvodes.fd.security.access.ConcreteAccessController
 org.vvodes.fd.security.access.CommonFeedbackAccessController
+org.vvodes.fd.security.access.ConcreteAccessControllerV040
