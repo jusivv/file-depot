@@ -47,9 +47,9 @@ A simple security file upload/download service
 
 - upload url: http(s)://\<fileserver\>/attachments/upload/bybase64
 - method: post, content-type: application/json
-- json content like this:
+- JSON content like this:
 
-```JSON
+```json
 {
   "clientId": "test",
   "token": "<token>",
@@ -60,7 +60,7 @@ A simple security file upload/download service
 }
 ```
 
-- response a json object with file information, for example:
+- response a JSON object with file information, for example:
 
 ```json
 {
@@ -80,12 +80,32 @@ A simple security file upload/download service
 
 ## download
 
+### by stream
+
 - download url: http(s)://\<fileserver\>/attachments/download/{fileId};c={clientId};t={token}
 - clientId: file-client id
 - token: file access token, session token or one time password
 - fileId: file id which you want to download
 - you can join fileId with "," to download files
 - multi-file download will pack all request files in a zip file
+
+### by base64
+
+- download url: http(s)://\<fileserver\>/attachments/base64/{fileId};c={clientId};t={token}
+- clientId: file-client id
+- token: file access token, session token or one time password
+- fileId: file id which you want to download, only one file to get for each request
+- response a JSON like this: 
+
+```json
+{
+"fileName":"5b5d2fc0-c028-11ea-a8cd-2bac079b3bed.jpg",
+"contentType":"image/jpeg",
+"extName":"jpg",
+"base64String":"<base64String>",
+"size":12641
+}
+```
 
 ## access control
 

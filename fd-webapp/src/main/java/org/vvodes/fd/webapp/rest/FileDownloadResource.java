@@ -3,18 +3,13 @@ package org.vvodes.fd.webapp.rest;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.coodex.util.Common;
-import org.coodex.util.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vvodes.fd.def.intf.IAccessController;
-import org.vvodes.fd.def.intf.IFileCipher;
 import org.vvodes.fd.def.intf.IFileRepository;
 import org.vvodes.fd.def.pojo.CommonFileInfo;
 import org.vvodes.fd.def.pojo.StoreFileInfo;
-import org.vvodes.fd.webapp.util.ComponentBuiler;
-import org.vvodes.fd.webapp.util.FileDepotWebException;
-import org.vvodes.fd.webapp.util.MessageResponseHelper;
+import org.vvodes.fd.webapp.util.AbstractDownloadResource;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
@@ -24,13 +19,11 @@ import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("attachments/download")
-public class FileDownloadResource {
+public class FileDownloadResource extends AbstractDownloadResource {
     private static Logger log = LoggerFactory.getLogger(FileDownloadResource.class);
-    private static Profile profile = Profile.get("config.properties");
 
     private IFileRepository fileRepository;
 
@@ -38,15 +31,6 @@ public class FileDownloadResource {
     public FileDownloadResource(IFileRepository fileRepository) {
         this.fileRepository = fileRepository;
         log.debug("resource {} loaded.", this.getClass().getSimpleName());
-    }
-
-    private OutputStream getDecryptStream(OutputStream os, String cipherModel, String salt)
-            throws IOException {
-        // key
-        byte[] key = ComponentBuiler.getKey(cipherModel, salt);
-        // cipher
-        IFileCipher fileCipher = ComponentBuiler.getFileCipher(cipherModel);
-        return fileCipher.getDecryptOutputStream(os, key);
     }
 
     private String getContentDispType(CommonFileInfo fileInfo) {
@@ -65,49 +49,20 @@ public class FileDownloadResource {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    // whether or read unlimited
-                    boolean readUnlimited = profile.getBool("read.unlimited", false);
-                    // get access controller
-                    IAccessController accessController = ComponentBuiler.getAccessController(clientId);
-                    // authenticate
-                    if (readUnlimited || accessController.canRead(clientId, token, fileId)) {
-                        // list file info
-                        String[] fids = fileId.split(",");
-                        List<StoreFileInfo> fileInfoList = new ArrayList<>();
-                        for (String fid : fids) {
-                            StoreFileInfo storeFileInfo = fileRepository.getFileInfo(fid);
-                            if (!readUnlimited && !accessController.inScope(clientId, storeFileInfo.getOwner())) {
-                                throw new FileDepotWebException(
-                                        String.format("forbidden to access file, id: %s, owner: %s, clientId: %s", fid,
-                                                storeFileInfo.getOwner(), clientId),
-                                        403
-                                );
-                            }
-                            fileInfoList.add(storeFileInfo);
-                        }
-                        // fetch file
-                        asyncResponse.resume(fetchFile(fileInfoList).build());
-                    } else {
-                        MessageResponseHelper.resume(403, "Access Forbidden", asyncResponse);
-                    }
-                } catch (Throwable t) {
-                    log.error(t.getLocalizedMessage(), t);
-                    if (t instanceof FileDepotWebException) {
-                        FileDepotWebException webException = (FileDepotWebException) t;
-                        MessageResponseHelper.resume(webException.getStatusCode(), webException.getLocalizedMessage(),
-                                asyncResponse);
-                    } else {
-                        MessageResponseHelper.resume(500, t.getLocalizedMessage(), asyncResponse);
-                    }
-                }
+                download(fileId, clientId, token, asyncResponse);
             }
         });
         t.setPriority(5);
         t.start();
     }
 
-    private Response.ResponseBuilder fetchFile(final List<StoreFileInfo> fileInfoList) throws IOException {
+    @Override
+    protected IFileRepository getFileRepository() {
+        return fileRepository;
+    }
+
+    @Override
+    protected Response.ResponseBuilder fetchFile(final List<StoreFileInfo> fileInfoList) throws IOException {
         Response.ResponseBuilder builder = Response.ok();
         if (fileInfoList.size() == 1) {
             StoreFileInfo storeFileInfo = fileInfoList.get(0);
