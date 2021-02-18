@@ -6,7 +6,7 @@
 
   <parent>
     <artifactId>file-depot</artifactId>
-    <groupId>org.vvodes</groupId>
+    <groupId>org.coodex</groupId>
     <version>1.0.0</version>
   </parent>
   <artifactId>fd-webapp</artifactId>
@@ -16,14 +16,18 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.vvodes</groupId>
+      <groupId>${project.parent.groupId}</groupId>
       <artifactId>fd-storage</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.vvodes</groupId>
+      <groupId>${project.parent.groupId}</groupId>
       <artifactId>fd-security</artifactId>
       <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

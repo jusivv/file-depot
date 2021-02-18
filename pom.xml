@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.vvodes</groupId>
+    <groupId>org.coodex</groupId>
     <artifactId>file-depot</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
@@ -17,13 +17,19 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
-        <java.version>1.8</java.version>
+        <spring.boot.version>2.2.0.RELEASE</spring.boot.version>
+<!--        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>-->
+        <java.version>11</java.version>
         <coodex.version>0.4.0</coodex.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-logging</artifactId>
