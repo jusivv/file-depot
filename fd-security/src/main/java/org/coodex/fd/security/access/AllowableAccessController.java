@@ -75,6 +75,12 @@ public class AllowableAccessController extends AbstractAccessController {
     }
 
     @Override
+    public boolean notify(String clientId, String token, String fileId) {
+        // do nothing
+        return true;
+    }
+
+    @Override
     public boolean accept(String tag) {
         return "allowable".equalsIgnoreCase(tag);
     }

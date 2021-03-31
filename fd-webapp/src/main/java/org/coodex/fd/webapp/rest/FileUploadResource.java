@@ -4,6 +4,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.coodex.fd.def.intf.IAccessController;
 import org.coodex.util.Common;
 import org.coodex.util.Profile;
 import org.slf4j.Logger;
@@ -53,7 +54,8 @@ public class FileUploadResource extends AbstractUploadResource {
             @Override
             public void run() {
                 try {
-                    if (canWrite(clientId, tokenId)) {
+                    IAccessController accessController = getAccessController(clientId);
+                    if (accessController.canWrite(clientId, tokenId)) {
                         ServletFileUpload uploadHandler = new ServletFileUpload(new DiskFileItemFactory());
                         List<FileItem> items = uploadHandler.parseRequest(request);
                         List<StoreFileInfo> fileInfoList = new ArrayList<>();
@@ -82,6 +84,8 @@ public class FileUploadResource extends AbstractUploadResource {
                                     is.close();
                                 }
                                 fileInfoList.add(storeFileInfo);
+                                // notify
+                                accessController.notify(clientId, tokenId, storeFileInfo.getFileId());
                             }
                         }
                         asyncResponse.resume(fileInfoList);

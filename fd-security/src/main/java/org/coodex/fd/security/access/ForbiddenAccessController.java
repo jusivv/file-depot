@@ -30,4 +30,9 @@ public class ForbiddenAccessController implements IAccessController {
     public boolean accept(String tag) {
         return "forbidden".equalsIgnoreCase(tag);
     }
+
+    @Override
+    public boolean notify(String clientId, String token, String fileId) {
+        return true;
+    }
 }

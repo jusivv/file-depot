@@ -37,4 +37,13 @@ public interface IAccessController extends IProviderSelector {
      * @return          是否可删除
      */
     boolean canDelete(String clientId, String token, String fileId);
+
+    /**
+     * 上传成功后的通知
+     * @param clientId  终端ID
+     * @param token     令牌
+     * @param fileId    文件ID
+     * @return          是否通知成功
+     */
+    boolean notify(String clientId, String token, String fileId);
 }

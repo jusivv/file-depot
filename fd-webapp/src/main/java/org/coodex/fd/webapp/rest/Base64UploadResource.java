@@ -1,6 +1,7 @@
 package org.coodex.fd.webapp.rest;
 
 import org.apache.commons.io.FilenameUtils;
+import org.coodex.fd.def.intf.IAccessController;
 import org.coodex.fd.webapp.pojo.Base64UploadReq;
 import org.coodex.fd.webapp.util.AbstractUploadResource;
 import org.coodex.util.Profile;
@@ -47,7 +48,8 @@ public class Base64UploadResource extends AbstractUploadResource {
             @Override
             public void run() {
                 try {
-                    if (canWrite(req.getClientId(), req.getToken())) {
+                    IAccessController accessController = getAccessController(req.getClientId());
+                    if (accessController.canWrite(req.getClientId(), req.getToken())) {
                         StoreFileInfo storeFileInfo = new StoreFileInfo();
                         storeFileInfo.setOwner(req.getClientId());
                         storeFileInfo.setOriginName(req.getFileName());
@@ -73,6 +75,8 @@ public class Base64UploadResource extends AbstractUploadResource {
                         } finally {
                             is.close();
                         }
+                        // notify
+                        accessController.notify(req.getClientId(), req.getToken(), storeFileInfo.getFileId());
                         asyncResponse.resume(storeFileInfo);
                     } else {
                         MessageResponseHelper.resume(403, "Access Forbidden", asyncResponse);

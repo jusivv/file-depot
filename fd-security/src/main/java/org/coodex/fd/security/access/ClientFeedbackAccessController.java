@@ -61,4 +61,9 @@ public abstract class ClientFeedbackAccessController extends AbstractAccessContr
     public boolean canDelete(String clientId, String token, String fileId) {
         return getFeedback(getHost(clientId),"/deletable", token, fileId);
     }
+
+    @Override
+    public boolean notify(String clientId, String token, String fileId) {
+        return getFeedback(getHost(clientId), "/notify", token, fileId);
+    }
 }

@@ -19,6 +19,15 @@ public abstract class AbstractUploadResource {
     }
 
     /**
+     * 获取AccessController
+     * @param clientId  终端ID
+     * @return          AccessController
+     */
+    protected IAccessController getAccessController(String clientId) {
+        return ComponentBuiler.getAccessController(clientId);
+    }
+
+    /**
      * 获取加密输入流
      * @param is            源输入流
      * @param cipherModel   加密模式
