@@ -4,7 +4,7 @@ import org.coodex.util.DigestHelper;
 import org.coodex.fd.def.intf.IKeyGenerator;
 
 /**
- * 简易   的密钥生成器
+ * 简易的密钥生成器
  */
 public class SimpleMixKeyGenerator implements IKeyGenerator {
     /**

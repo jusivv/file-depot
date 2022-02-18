@@ -1,0 +1,9 @@
+file-depot:
+  image: 'file-depot:1.0.0'
+  container_name: 'file-depot-webapp'
+  environment:
+    - APP_STATE=prod
+    - LOGGING_TYPE=file
+    - LOG_HOME=/app/logs
+  ports:
+    - '8090:8090'

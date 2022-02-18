@@ -2,7 +2,7 @@
 
 A simple security file upload/download service
 
-## concept
+## Concept
 
 ### file-depot
 
@@ -16,9 +16,9 @@ A simple security file upload/download service
 
 - a end user using business service provided by file-client and file upload & download service provided by file-depot
 
-## upload
+## Upload
 
-### upload by form
+### Upload by form
 
 - upload url: http(s)://\<fileserver\>/attachments/upload/byform/{clientId}/{token}/{encrypt}
 - clientId: file-client id
@@ -43,7 +43,7 @@ A simple security file upload/download service
 }]
 ```
 
-### upload by base64 string
+### Upload by base64 string
 
 - upload url: http(s)://\<fileserver\>/attachments/upload/bybase64
 - method: post, content-type: application/json
@@ -78,9 +78,9 @@ A simple security file upload/download service
 }
 ```
 
-## download
+## Download
 
-### by stream
+### By stream
 
 - download url: http(s)://\<fileserver\>/attachments/download/{fileId};c={clientId};t={token}
 - clientId: file-client id
@@ -89,7 +89,7 @@ A simple security file upload/download service
 - you can join fileId with "," to download files
 - multi-file download will pack all request files in a zip file
 
-### by base64
+### By base64
 
 - download url: http(s)://\<fileserver\>/attachments/base64/{fileId};c={clientId};t={token}
 - clientId: file-client id
@@ -107,7 +107,7 @@ A simple security file upload/download service
 }
 ```
 
-## access control
+## Access control
 
 ### TOTP based
 
@@ -147,3 +147,11 @@ or
 #### Concrete
 
 - see filedepot.manual.concrete.md
+
+## Dockerize
+
+```shell
+docker build -t file-depot:1.0.0 .
+docker-compose up -d
+docker-compose down
+```
