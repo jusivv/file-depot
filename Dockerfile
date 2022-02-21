@@ -1,5 +1,5 @@
 # build stage
-FROM maven:3.8.4-openjdk-11-slim AS build
+FROM maven:3.8.4-openjdk-11 AS build
 WORKDIR /src/file-depot
 COPY ./ ./
 RUN mvn clean package -U -pl fd-webapp -am -Dmaven.test.skip=true
