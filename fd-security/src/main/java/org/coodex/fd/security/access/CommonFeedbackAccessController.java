@@ -18,7 +18,7 @@ public class CommonFeedbackAccessController extends ClientFeedbackAccessControll
 
     @Override
     protected boolean parseResponse(Response response) {
-        return response.code() == 200;
+        return super.successStatus(response.code());
     }
 
     @Override

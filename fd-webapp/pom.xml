@@ -10,7 +10,7 @@
     <version>1.0.0</version>
   </parent>
   <artifactId>fd-webapp</artifactId>
-<!--  <packaging>war</packaging>-->
+  <packaging>war</packaging>
 
   <name>fd-webapp</name>
 
@@ -72,6 +72,11 @@
     <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.13.2</version>
     </dependency>
 <!--    <dependency>-->
 <!--      <groupId>io.springfox</groupId>-->

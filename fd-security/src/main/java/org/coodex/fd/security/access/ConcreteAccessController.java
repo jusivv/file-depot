@@ -28,7 +28,7 @@ public class ConcreteAccessController extends ClientFeedbackAccessController {
     @Override
     protected boolean parseResponse(Response response) {
         try {
-            return response.code() == 200 && response.body().string().equalsIgnoreCase("true");
+            return successStatus(response.code()) && response.body().string().equalsIgnoreCase("true");
         } catch (IOException e) {
             log.error(e.getLocalizedMessage(), e);
             return false;

@@ -17,6 +17,15 @@ public abstract class ClientFeedbackAccessController extends AbstractAccessContr
         this.client = new OkHttpClient();
     }
 
+    /**
+     * 判断代码是否为成功状态
+     * @param code  HTTP状态码
+     * @return      是否是成功状态
+     */
+    protected boolean successStatus(int code) {
+        return code >= 200 && code < 300;
+    }
+
     protected abstract Request buildRequest(String url, String token, String fileId);
 
     protected abstract boolean parseResponse(Response response);

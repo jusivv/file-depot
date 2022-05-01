@@ -18,7 +18,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>2.2.0.RELEASE</spring.boot.version>
-<!--        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>-->
         <java.version>11</java.version>
         <coodex.version>0.4.0</coodex.version>
     </properties>
@@ -128,15 +127,16 @@
         </dependencies>
     </dependencyManagement>
 
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <compilerArgument>-parameters</compilerArgument>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
         </plugins>
