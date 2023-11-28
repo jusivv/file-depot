@@ -17,7 +17,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>2.2.0.RELEASE</spring.boot.version>
+        <spring.boot.version>2.7.18</spring.boot.version>
 <!--        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>-->
         <java.version>11</java.version>
         <coodex.version>0.4.0</coodex.version>
